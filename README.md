@@ -1,2 +1,2 @@
-# go_blog
-go 语言搭建的blog 学习使用
+# go_demo
+go 语言搭建的demo 学习使用
