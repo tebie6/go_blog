@@ -18,6 +18,7 @@ func init() {
 
     // Admin自动匹配  例如  /admin/login
     beego.AutoRouter(&controllers.AdminController{})
+    beego.AutoRouter(&controllers.AuthController{})
 
     // Admin 登陆验证
     beego.InsertFilter("/admin/*", beego.BeforeRouter, adminLoginFilter)

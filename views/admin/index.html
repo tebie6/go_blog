@@ -65,8 +65,9 @@
     </div>
 </div>
 
-<script src="/static/plug/layui/lay/lib/jquery.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" src="/static/plug/layui/layui.js"></script>
+<script src="/static/plug/layui/lay/lib/jquery.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
 <script type="text/javascript">
     /**
      * 对layui进行全局配置
@@ -85,15 +86,60 @@
      */
     layui.use(['cms'], function() {
         var cms = layui.cms('left-nav', 'top-tab');
-        cms.addNav([
-            { id: 1, pid: 0, node: '<span style=" font-size: 16px"><i class="layui-icon">&#xe620;</i> 系统管理</span>', url: '#' },
-            { id: 7, pid: 1, node: '&nbsp;&nbsp;&nbsp;系统设置', url: '/admin/config.html' },
-            { id: 2, pid: 0, node: '<span style=" font-size: 16px"><i class="layui-icon">&#xe63c;</i> 内容管理</span>', url: '#' },
-            { id: 3, pid: 2, node: '&nbsp;&nbsp;&nbsp;分类管理', url: '/admin/category.html' },
-            { id: 5, pid: 2, node: '&nbsp;&nbsp;&nbsp;博文列表', url: '/admin/articlelist.html' },
-            { id: 6, pid: 2, node: '&nbsp;&nbsp;&nbsp;博文添加', url: '/admin/article.html' },
-        ], 0, 'id', 'pid', 'node', 'url');
-        cms.bind(60 + 41 + 20 + 44); //头部高度 + 顶部切换卡标题高度 + 顶部切换卡内容padding + 底部高度
+
+        var configJson = [];
+
+        $.ajax( {
+            url : '/admin/getsideconfig',
+            type : 'get',
+            dataType : 'json',
+            success : function(data) {
+                // var menu = ""; //定义变量存储
+                // for(var i = 0;i<data.length;i++){
+                //     menu += "<li class='layui-nav-item '>"
+                //     if(data[i].pareMenuId == 0){ //取出父元素的菜单，拼进页面
+                //         menu +=        "<a href='javascript:;'>"+data[i].menuName+"</a>"
+                //         for(var j = 0;j<data.length;j++){ //继续遍历这几条数据
+                //             if(data[j].mid > data[i].mid && data[j].mid < (data[i].mid)+1000){ //取出这个父元素所对应的子元素
+                //                 menu +=    "<dl class='layui-nav-child'>"
+                //                 menu +=        "<dd>"
+                //                 menu +=            "<a href='"+data[j].menuPath+"' target='option'>"+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+data[j].menuName+"</a>"
+                //                 menu +=        "</dd>"
+                //                 menu +=    "</dl>"
+                //             }
+                //         }
+                //     }
+                //     menu +=    "</li>";
+                // }
+                // $("#nav").html(menu);
+                // var element = layui.element;
+                // element.init()//初始化element事件，使菜单展开
+
+                configJson = data
+                cms.addNav(configJson, 0, 'id', 'pid', 'node', 'url');
+                cms.bind(60 + 41 + 20 + 44); //头部高度 + 顶部切换卡标题高度 + 顶部切换卡内容padding + 底部高度
+            }
+        });
+
+        // configJson = [
+        //     { id: 1, pid: 0, node: '<span style=" font-size: 16px"><i class="layui-icon">&#xe620;</i> 系统管理</span>', url: '#' },
+        //     { id: 7, pid: 1, node: '&nbsp;&nbsp;&nbsp;系统设置', url: '/admin/config.html' },
+        //     { id: 2, pid: 0, node: '<span style=" font-size: 16px"><i class="layui-icon">&#xe63c;</i> 内容管理</span>', url: '#' },
+        //     { id: 3, pid: 2, node: '&nbsp;&nbsp;&nbsp;分类管理', url: '/admin/category.html' },
+        //     { id: 5, pid: 2, node: '&nbsp;&nbsp;&nbsp;博文列表', url: '/admin/articlelist.html' },
+        //     { id: 6, pid: 2, node: '&nbsp;&nbsp;&nbsp;博文添加', url: '/admin/article.html' },
+        // ];
+
+        // cms.addNav([
+        //     { id: 1, pid: 0, node: '<span style=" font-size: 16px"><i class="layui-icon">&#xe620;</i> 系统管理</span>', url: '#' },
+        //     { id: 7, pid: 1, node: '&nbsp;&nbsp;&nbsp;系统设置', url: '/admin/config.html' },
+        //     { id: 2, pid: 0, node: '<span style=" font-size: 16px"><i class="layui-icon">&#xe63c;</i> 内容管理</span>', url: '#' },
+        //     { id: 3, pid: 2, node: '&nbsp;&nbsp;&nbsp;分类管理', url: '/admin/category.html' },
+        //     { id: 5, pid: 2, node: '&nbsp;&nbsp;&nbsp;博文列表', url: '/admin/articlelist.html' },
+        //     { id: 6, pid: 2, node: '&nbsp;&nbsp;&nbsp;博文添加', url: '/admin/article.html' },
+        // ], 0, 'id', 'pid', 'node', 'url');
+        // cms.addNav(configJson, 0, 'id', 'pid', 'node', 'url');
+        // cms.bind(60 + 41 + 20 + 44); //头部高度 + 顶部切换卡标题高度 + 顶部切换卡内容padding + 底部高度
         // cms.clickLI(5);
 
     });

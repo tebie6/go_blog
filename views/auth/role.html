@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>个人客户列表</title>
+    <link rel="stylesheet" href="/static/plug/layui/css/layui.css">
+</head>
+<body>
+<script type="text/javascript" src="/static/plug/layui/layui.js"></script>
+<form class="layui-form" action="/auth/rolesave"  method="post" style="margin:20px">
+    <input name="id" type="hidden" value="{{.role.Id}}">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">角色名称：</label>
+        <div class="layui-input-block">
+            <input type="text" name="role_name" required value="{{.role.RoleName}}" lay-verify="required" placeholder="请输入角色名称" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">角色别名：</label>
+        <div class="layui-input-block">
+            <input type="text" name="role_alias_name" required value="{{.role.RoleAliasName}}" lay-verify="required" placeholder="请输入角色别名" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script>
+    //Demo
+    layui.use('form', function(){
+
+
+    });
+
+</script>
+
+</body>
+</html>

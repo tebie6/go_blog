@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/astaxie/beego"
 	"go_demo/models"
@@ -15,10 +16,20 @@ type AdminController struct {
 	baseController
 }
 
+// 主体布局
+func (this *AdminController) Main(){
+
+	this.TplName = this.controllerName + "/main.html"
+}
+
+//console
+func (this *AdminController) Console(){
+
+	this.TplName = this.controllerName + "/console.html"
+}
 
 // 首页
 func (this *AdminController) Index(){
-
 
 	this.TplName = this.controllerName + "/index.html"
 }
@@ -292,8 +303,84 @@ func (this *AdminController) CategoryDel(){
 			this.History("删除成功", "/admin/category.html")
 		}
 	}
+}
+
+type side struct {
+	id string
+	pid string
+	node string
+	url string
+}
+
+
+// 加载侧边栏配置
+func (this *AdminController) GetSideConfig(){
+
+	//json := `[
+	//	{ "id" = 1, "pid" = 0, "node" = "<span style=' font-size: 16px'><i class='layui-icon'>&#xe620;</i> 系统管理</span>", "url" = "#" },
+	//	{ "id" = 7, "pid" = 1, "node" = "&nbsp;&nbsp;&nbsp;系统设置", "url" = "/admin/config.html" },
+	//	{ "id" = 2, "pid" = 0, "node" = "<span style=' font-size: 16px'><i class='layui-icon'>&#xe63c;</i> 内容管理</span>", "url" = "#" },
+	//	{ "id" = 3, "pid" = 2, "node" = "&nbsp;&nbsp;&nbsp;分类管理", "url" = "/admin/category.html" },
+	//	{ "id" = 5, "pid" = 2, "node" = "&nbsp;&nbsp;&nbsp;博文列表", "url" = "/admin/articlelist.html" },
+	//	{ "id" = 6, "pid" = 2, "node" = "&nbsp;&nbsp;&nbsp;博文添加", "url" = "/admin/article.html" }
+	//]`
 
 
 
+	//a := make(map[int] map[string] string)
 
+	//jsonData := make(map[int] [2]side)
+
+
+	//jsonData[0] = [2]side{{"1", "0", "aaa",""}, {"7", "1", "bbb",""}}
+
+
+
+	//temp, _ := json.Marshal(jsonData)
+	//this.Ctx.WriteString(temp)
+
+	//fmt.Println("b:", string(temp))
+
+	//beego.Error(temp)
+
+	s := []map[string]interface{}{}
+
+	m1 := map[string]interface{}{ "id": 1, "pid": 0, "node": "<span style=' font-size: 16px'><i class='layui-icon'>&#xe620;</i> 系统管理</span>", "url": "#" }
+	m2 := map[string]interface{}{ "id": 7, "pid": 1, "node": "&nbsp;&nbsp;&nbsp;系统设置", "url": "/admin/config.html" }
+	m3 := map[string]interface{}{ "id": 2, "pid": 0, "node": "<span style=' font-size: 16px'><i class='layui-icon'>&#xe63c;</i> 内容管理</span>", "url": "#" }
+	m4 := map[string]interface{}{ "id": 3, "pid": 2, "node": "&nbsp;&nbsp;&nbsp;分类管理", "url": "/admin/category.html" }
+	m5 := map[string]interface{}{ "id": 5, "pid": 2, "node": "&nbsp;&nbsp;&nbsp;博文列表", "url": "/admin/articlelist.html" }
+	m6 := map[string]interface{}{ "id": 6, "pid": 2, "node": "&nbsp;&nbsp;&nbsp;博文添加", "url": "/admin/article.html" }
+	m7 := map[string]interface{}{ "id": 8, "pid": 0, "node": "<span style=' font-size: 16px'><i class='layui-icon'>&#xe63c;</i> 权限管理</span>", "url": "#" }
+	m8 := map[string]interface{}{ "id": 9, "pid": 8, "node": "&nbsp;&nbsp;&nbsp;博文添加", "url": "/admin/article.html" }
+
+	s = append(s, m1, m2, m3, m4, m5, m6, m7, m8)
+
+	b, _ := json.Marshal(s)
+
+	this.Ctx.WriteString(string(b))
+	//if err != nil {
+	//	fmt.Println("json.Marshal failed:", err)
+	//	return
+	//}
+	//
+	//
+	//fmt.Println("b:", string(b))
+
+	//config := [...] string {
+	//	{ "id" = 1, "pid" = 0, "node" = "<span style=' font-size: 16px'><i class='layui-icon'>&#xe620;</i> 系统管理</span>", "url" = "#" },
+	//	{ "id" = 7, "pid" = 1, "node" = "&nbsp;&nbsp;&nbsp;系统设置", "url" = "/admin/config.html" },
+	//	{ "id" = 2, "pid" = 0, "node" = "<span style=' font-size: 16px'><i class='layui-icon'>&#xe63c;</i> 内容管理</span>", "url" = "#" },
+	//	{ "id" = 3, "pid" = 2, "node" = "&nbsp;&nbsp;&nbsp;分类管理", "url" = "/admin/category.html" },
+	//	{ "id" = 5, "pid" = 2, "node" = "&nbsp;&nbsp;&nbsp;博文列表", "url" = "/admin/articlelist.html" },
+	//	{ "id" = 6, "pid" = 2, "node" = "&nbsp;&nbsp;&nbsp;博文添加", "url" = "/admin/article.html" }
+	//}
+	//[
+	//{ id: 1, pid: 0, node: '<span style=" font-size: 16px"><i class="layui-icon">&#xe620;</i> 系统管理</span>', url: '#' },
+	//{ id: 7, pid: 1, node: '&nbsp;&nbsp;&nbsp;系统设置', url: '/admin/config.html' },
+	//{ id: 2, pid: 0, node: '<span style=" font-size: 16px"><i class="layui-icon">&#xe63c;</i> 内容管理</span>', url: '#' },
+	//{ id: 3, pid: 2, node: '&nbsp;&nbsp;&nbsp;分类管理', url: '/admin/category.html' },
+	//{ id: 5, pid: 2, node: '&nbsp;&nbsp;&nbsp;博文列表', url: '/admin/articlelist.html' },
+	//{ id: 6, pid: 2, node: '&nbsp;&nbsp;&nbsp;博文添加', url: '/admin/article.html' },
+	//]
 }

@@ -7,7 +7,6 @@ import (
 	_ "go_demo/routers"
 )
 
-
 func init() {
 	models.Init()
 	beego.BConfig.WebConfig.Session.SessionOn = true
