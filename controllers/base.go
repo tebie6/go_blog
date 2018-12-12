@@ -85,3 +85,35 @@ func (p *baseController) renderJson(code int, message string, data interface{}) 
 	p.Data["json"] = responseJson
 	p.ServeJSON()
 }
+
+// ContactPost 处理用户发送的表单数组数据	源于 https://codeday.me/bug/20180923/260915.html
+func (p *baseController) ContactPost(keyName string) (map[string] string) {
+
+	// 解析表单数据
+	err := p.Ctx.Request.ParseForm()
+
+	if err != nil {
+		beego.Error(err.Error())
+		return nil
+	}
+
+	// 声明一个map 用来存储返回数据
+	contact := make(map[string]string)
+
+	// 遍历表单数据
+	for i := range p.Ctx.Request.Form {
+
+		// 判断 i 是否有前缀字符串prefix。
+		if strings.HasPrefix(i, keyName + "[") {
+
+			// 将前缀 和 后缀 中括号[] 替换为空
+			rp := strings.NewReplacer(keyName + "[", "", "]", "")
+
+			// Replace返回 i 的所有替换进行完后的拷贝。
+			contact[rp.Replace(i)] = p.Ctx.Request.Form.Get(i)
+		}
+	}
+
+	return contact
+
+}

@@ -13,7 +13,7 @@
             , {field: "RoleName", title: "角色名"}
             , {field: "RoleAliasName", title: "角色名"}
             // , {field: "limits", title: "拥有权限"}
-            , {field: "Descr", title: "具体描述"}
+            , {field: "Descr", tiwtle: "具体描述"}
             , {
                 title: "操作",
                 width: 150,

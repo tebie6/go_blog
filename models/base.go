@@ -21,7 +21,7 @@ func Init(){
 	orm.RegisterDataBase("default", "mysql", dsn)
 
 	// 需要在init中注册定义的model
-	orm.RegisterModel(new(User), new(Comment), new(Post), new(Category), new(AuthRole))
+	orm.RegisterModel(new(User), new(Comment), new(Post), new(Category), new(AuthRole), new(AuthPermission), new(AuthRoleNode))
 }
 
 

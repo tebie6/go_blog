@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<div class="layui-form" lay-filter="layuiadmin-form-role" id="layuiadmin-form-role" style="padding: 20px 30px 0 0;">
+<form class="layui-form" lay-filter="layuiadmin-form-role" id="layuiadmin-form-role" style="padding: 20px 30px 0 0;">
 
     <input type="hidden" name="id" value="{{ .role.Id }}">
     <div class="layui-form-item">
@@ -37,27 +37,16 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">权限范围</label>
+        <label class="layui-form-label">选择权限</label>
         <div class="layui-input-block">
-            <input type="checkbox" name="limits[]" lay-skin="primary" title="内容系统">
-            <input type="checkbox" name="limits[]" lay-skin="primary" title="社区系统">
-            <input type="checkbox" name="limits[]" lay-skin="primary" title="用户">
-            <input type="checkbox" name="limits[]" lay-skin="primary" title="角色">
-            <input type="checkbox" name="limits[]" lay-skin="primary" title="评论审核">
-            <input type="checkbox" name="limits[]" lay-skin="primary" title="发货">
-            <input type="checkbox" name="limits[]" lay-skin="primary" title="采购">
-            <input type="checkbox" name="limits[]" lay-skin="primary" title="系统设置">
-            <input type="checkbox" name="limits[]" lay-skin="primary" title="发邮件">
-            <input type="checkbox" name="limits[]" lay-skin="primary" title="发短信">
-            <input type="checkbox" name="limits[]" lay-skin="primary" title="审核">
-            <input type="checkbox" name="limits[]" lay-skin="primary" title="删库跑路">
+            <div id="LAY-auth-tree-index"></div>
         </div>
     </div>
 
     <div class="layui-form-item layui-hide">
         <button class="layui-btn" lay-submit lay-filter="LAY-user-role-submit" id="LAY-user-role-submit">提交</button>
     </div>
-</div>
+</form>
 
 <script src="/static/layuiadmin/layui/layui.js"></script>
 <script>
@@ -65,9 +54,41 @@
         base: '/static/layuiadmin/' //静态资源所在路径
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use(['index', 'form'], function(){
+        , authtree: 'authtree'
+    }).use(['index', 'form', 'authtree', 'layer'], function(){
         var $ = layui.$
-                ,form = layui.form ;
+                ,form = layui.form
+                ,authtree = layui.authtree
+                ,layer = layui.layer;
+
+        var roleId = $("[name='id']").val()
+        // 一般来说，权限数据是异步传递过来的
+        $.ajax({
+            url: '/auth/permissionlistapi?act=authtree&role_id=' + roleId,
+            dataType: 'json',
+            async : false,
+            success: function (data) {
+                // var trees = data.data.trees;
+                console.log(data)
+
+                var trees = authtree.listConvert(data.data.list, {
+                    primaryKey: 'Id'
+                    ,startPid: 0
+                    ,parentKey: 'Pid'
+                    ,nameKey: 'Title'
+                    ,valueKey: 'Id'
+                    ,checkedKey: data.data.checkedId
+                });
+                // 如果后台返回的不是树结构，请使用 authtree.listConvert 转换
+                authtree.render('#LAY-auth-tree-index', trees, {
+                    inputname: 'authids[]',
+                    layfilter: 'lay-check-auth',
+                    autowidth: true,
+                });
+
+
+            }
+        })
     })
 </script>
 </body>

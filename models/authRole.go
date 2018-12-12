@@ -7,7 +7,7 @@ import (
 )
 
 type AuthRole struct {
-	Id int
+	Id int64
 	RoleName string
 	RoleAliasName string
 	Status int
@@ -75,4 +75,9 @@ func (m *AuthRole) BatchDelete(ids string) bool {
 	}
 
 	return true
+}
+
+// 保存角色
+func (m *AuthRole) Save(){
+
 }

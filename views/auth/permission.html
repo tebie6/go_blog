@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>个人客户列表</title>
+    <link rel="stylesheet" href="/static/plug/layui/css/layui.css">
+</head>
+<body>
+
+    <form class="layui-form" method="post" style="margin:20px">
+
+        <input type="hidden" name="id" id="id" value="">
+        <input type="hidden" id="level" value="">
+        <input type="hidden" id="pid" value="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限名称</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input title" name="title" lay-verify="required" placeholder="请输入权限名称">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限类型</label>
+            <div class="layui-input-block">
+                <select name="level" lay-filter="level"  lay-verify="required">
+                    <option value="">请选择权限类型</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">所属权限</label>
+            <div class="layui-input-block">
+                <select name="pid" lay-verify="required">
+                    <option value="">请选择权限</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">路由</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" name="route" id="route" lay-verify="required" placeholder="请输入路由">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否展示</label>
+            <div class="layui-input-block">
+                <select name="is_show">
+                    <option value="0">展示</option>
+                    <option value="1">不展示</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限状态</label>
+            <div class="layui-input-block">
+                <select name="status">
+                    <option value="0">启用</option>
+                    <option value="1">禁用</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item layui-hide">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="addPermission" id="addPermission">提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript" src="/static/layuiadmin/layui/layui.js"></script>
+    {{/*<script type="text/javascript" src="/static/plug/layui/layui.js"></script>*/}}
+<script>
+
+    layui.config({
+        base : "/static/layuiadmin/"
+    }).extend({
+        index: 'lib/index' //主入口模块
+    });
+    layui.use(['form','layer'],function(){
+        var form = layui.form;
+        var layer = parent.layer === undefined ? layui.layer : top.layer;
+        var $ = layui.jquery;
+
+        // 请求类型数据
+        $.post("/auth/permission.html?act=getSelectTypeData",function(data){
+            var resourceTypeList = eval('('+ data +')');
+            for (var i=0; i<resourceTypeList.length; i++) {
+                $("[name='level']").append("<option value='"+resourceTypeList[i].id+"'>"+resourceTypeList[i].name+"</option>");
+            }
+
+            //编辑
+            if($("#level").val()!==""){
+                $("[name='level']").val($("#level").val());//默认选中
+                $("[name='level']").attr("disabled","disabled");
+                getParentSelectData($("#level").val());
+            }
+
+            form.render('select');//重新渲染
+        });
+
+        // 选择权限类型
+        form.on('select(level)', function(data){
+            console.log(data.value);//得到被选中的值
+
+            // 如果 value = 1 顶级应用
+            console.log(data.value)
+            if(data.value == 1){
+                $("[name='pid']").attr("disabled","disabled");
+                $("[name='pid']").removeAttr("lay-verify");
+                $("[name='pid']").empty();//清空下拉列表
+                $("[name='pid']").append("<option value=''>请选择权限</option>");
+                form.render('select');//重新渲染
+                return;
+            }else{
+                $("[name='pid']").removeAttr("disabled");
+                $("[name='pid']").attr("lay-verify","required");
+                form.render('select');//重新渲染
+                getParentSelectData(data.value);
+            }
+        });
+
+        // 请求父级节点数据
+        function getParentSelectData(level){
+            $.post("/auth/permission.html?act=getParentSelectData",{level: level},function(data){
+                var parentSelectList = data.data;
+                $("[name='pid']").empty();//清空下拉列表
+                $("[name='pid']").append("<option value=''>请选择权限</option>");
+
+                for (var i=0; i<parentSelectList.length; i++) {
+                    $("[name='pid']").append("<option value='"+parentSelectList[i].Id+"'>"+parentSelectList[i].Title+"</option>");
+                }
+
+                //编辑
+                if($("#pid").val()!==""){
+                    $("[name='pid']").val($("#pid").val());//默认选中
+                    $("[name='pid']").attr("disabled","disabled");
+                }
+                form.render('select');//重新渲染
+            });
+        }
+
+    })
+
+</script>
+
+</body>
+</html>
