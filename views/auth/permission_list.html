@@ -88,7 +88,7 @@
                 {field: 'Route', minWidth: 100, title: '路由'},
                 {
                     field: 'IsShow', width: 200, align: 'center', templet: function (d) {
-                        if (d.IsShow === 0) {
+                        if (d.IsShow === 1) {
                             return '<span class="layui-badge layui-bg-green">展示</span>';
                         } else {
                             return '<span class="layui-badge layui-bg-gray">不展示</span>';
@@ -97,7 +97,7 @@
                 },
                 {
                     field: 'Status', width: 200, align: 'center', templet: function (d) {
-                        if (d.Status === 0) {
+                        if (d.Status === 1) {
                             return '<span class="layui-badge layui-bg-green">启用</span>';
                         } else {
                             return '<span class="layui-badge layui-bg-gray">禁用</span>';

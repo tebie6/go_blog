@@ -19,6 +19,15 @@ type AdminController struct {
 // 主体布局
 func (this *AdminController) Main(){
 
+	permissionList := [] *models.AuthPermission{}
+	this.o.QueryTable( new(models.AuthPermission).TableName() ).Filter("IsShow",1).All(&permissionList)
+
+	permissionListTree, _ := util.NodeDataMerge(permissionList,41)
+
+	//this.Data["json"] = permissionListTree
+	//this.ServeJSON()
+	//return
+	this.Data["navList"] = permissionListTree
 	this.TplName = this.controllerName + "/main.html"
 }
 

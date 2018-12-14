@@ -113,26 +113,47 @@
                         </dl>
                     </li>
 
-                    <li data-name="user" class="layui-nav-item">
-                        <a href="javascript:;" lay-tips="用户" lay-direction="2">
-                            <i class="layui-icon layui-icon-user"></i>
-                            <cite>用户</cite>
-                        </a>
-                        <dl class="layui-nav-child">
-                            <dd>
-                                <a lay-href="user/user/list.html">网站用户</a>
-                            </dd>
-                            <dd>
-                                <a lay-href="user/administrators/list.html">后台管理员</a>
-                            </dd>
-                            <dd>
-                                <a lay-href="/auth/rolelist.html">角色管理</a>
-                            </dd>
-                            <dd>
-                                <a lay-href="/auth/permissionlist.html">权限管理</a>
-                            </dd>
-                        </dl>
-                    </li>
+                    {{/*<li data-name="user" class="layui-nav-item">*/}}
+                        {{/*<a href="javascript:;" lay-tips="用户" lay-direction="2">*/}}
+                            {{/*<i class="layui-icon layui-icon-user"></i>*/}}
+                            {{/*<cite>用户</cite>*/}}
+                        {{/*</a>*/}}
+                        {{/*<dl class="layui-nav-child">*/}}
+                            {{/*<dd>*/}}
+                                {{/*<a lay-href="user/user/list.html">网站用户</a>*/}}
+                            {{/*</dd>*/}}
+                            {{/*<dd>*/}}
+                                {{/*<a lay-href="user/administrators/list.html">后台管理员</a>*/}}
+                            {{/*</dd>*/}}
+                            {{/*<dd>*/}}
+                                {{/*<a lay-href="/auth/rolelist.html">角色管理</a>*/}}
+                            {{/*</dd>*/}}
+                            {{/*<dd>*/}}
+                                {{/*<a lay-href="/auth/permissionlist.html">权限管理</a>*/}}
+                            {{/*</dd>*/}}
+                        {{/*</dl>*/}}
+                    {{/*</li>*/}}
+
+                    {{ range .navList }}
+
+                        <li data-name="user" class="layui-nav-item">
+                            <a href="javascript:;" lay-tips="用户" lay-direction="2">
+                                <i class="layui-icon layui-icon-user"></i>
+                                <cite>{{ .Title }}</cite>
+                            </a>
+                            <dl class="layui-nav-child">
+
+                                {{ range .Child }}
+                                    <dd>
+                                        <a lay-href="{{ .Route }}.html">{{ .Title }}</a>
+                                    </dd>
+                                {{ end }}
+
+                            </dl>
+                        </li>
+
+                    {{ end }}
+
                 </ul>
             </div>
         </div>

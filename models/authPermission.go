@@ -18,6 +18,21 @@ type AuthPermission struct {
 	UpdatedAt time.Time
 }
 
+// 用于处理树结构
+type AuthPermissionTree struct {
+	Id int
+	Title string
+	Pid int
+	Level int
+	Status int
+	Route string
+	IsShow int
+	IsDel int
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	Child [] *AuthPermissionTree
+}
+
 func (m *AuthPermission) TableName() string {
 	return TableName("auth_permission")
 }

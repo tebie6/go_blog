@@ -33,7 +33,7 @@ func (this *baseController) Prepare() {
 	// 做登陆验证
 	if this.controllerName == "admin" && this.actionName != "login" {
 
-		beego.Debug(this.GetSession("user"))
+		//beego.Debug(this.GetSession("user"))
 		if this.GetSession("user") == nil {
 			//this.Ctx.Redirect(302, "/admin/login")
 		}
