@@ -20,14 +20,8 @@ func (m *AuthRole) TableName() string {
 	return TableName("auth_role")
 }
 
-type Filter struct {
-	Page int
-	PageSize int
-}
-
 // 查询所有
 func (m *AuthRole) GetAll(filter *Filter) ([] *AuthRole, int64){
-
 
 	o :=  orm.NewOrm()
 	list := [] *AuthRole{}

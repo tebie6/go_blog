@@ -5,6 +5,12 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
+
+type Filter struct {
+	Page int
+	PageSize int
+}
+
 func Init(){
 
 	dbhost := beego.AppConfig.String("dbhost")
@@ -21,7 +27,7 @@ func Init(){
 	orm.RegisterDataBase("default", "mysql", dsn)
 
 	// 需要在init中注册定义的model
-	orm.RegisterModel(new(User), new(Comment), new(Post), new(Category), new(AuthRole), new(AuthPermission), new(AuthRoleNode))
+	orm.RegisterModel(new(User), new(Comment), new(Post), new(Category), new(AuthRole), new(AuthPermission), new(AuthRoleNode), new(Admin))
 }
 
 

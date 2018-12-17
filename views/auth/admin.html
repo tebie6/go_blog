@@ -1,0 +1,99 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layuiAdmin 管理员 iframe 框</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="/static/layuiadmin/layui/css/layui.css" media="all">
+</head>
+<body>
+
+<form class="layui-form" method="post" style="padding: 20px 30px 0 0;">
+
+    <input type="hidden" name="id" value="{{ .info.Id}}">
+    <input type="hidden" id="role_id" value="{{ .info.RoleId}}">
+    <div class="layui-form-item">
+        <label class="layui-form-label">登录名</label>
+        <div class="layui-input-inline">
+            <input type="text" name="username" value="{{ .info.Username}}" lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    {{/*<div class="layui-form-item">*/}}
+        {{/*<label class="layui-form-label">密码</label>*/}}
+        {{/*<div class="layui-input-inline">*/}}
+            {{/*<input type="password" name="password" lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">*/}}
+        {{/*</div>*/}}
+    {{/*</div>*/}}
+    <div class="layui-form-item">
+        <label class="layui-form-label">手机</label>
+        <div class="layui-input-inline">
+            <input type="text" name="phone" value="{{ .info.Phone }}" lay-verify="phone" placeholder="请输入号码" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">邮箱</label>
+        <div class="layui-input-inline">
+            <input type="text" name="email" value="{{ .info.Email }}" lay-verify="email" placeholder="请输入邮箱" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">角色</label>
+        <div class="layui-input-block">
+            <select name="role" lay-filter="role"  lay-verify="required">
+                <option value="">请选择角色</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">审核状态</label>
+        <div class="layui-input-inline">
+            <input type="checkbox" lay-filter="switch" name="status" lay-skin="switch" value="1" lay-text="通过|待审核" {{ if eq .info.Status 1 }} checked {{ end }}>
+        </div>
+    </div>
+    <div class="layui-form-item layui-hide">
+        <button class="layui-btn" lay-submit lay-filter="LAY-user-back-submit" id="LAY-user-back-submit">提交</button>
+    </div>
+</form>
+
+<script type="text/javascript" src="/static/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/static/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form'], function(){
+        var $ = layui.$
+                ,form = layui.form ;
+
+
+        // 请求角色数据
+        $.post("/auth/rolelist.html",function(data){
+
+            if (data.code == 0) {
+
+                var list = data.data
+                for (var i=0; i<list.length; i++) {
+                    $("[name='role']").append("<option value='"+list[i].Id+"'>"+list[i].RoleName+"</option>");
+                }
+
+                //编辑
+                var role_id = $("#role_id").val();
+                console.log(role_id)
+                if(role_id != "" && role_id != 0){
+                    $("[name='role']").val(role_id);//默认选中
+                }
+
+                form.render('select');//重新渲染
+            } else {
+
+            }
+
+        });
+    })
+</script>
+</body>
+</html>

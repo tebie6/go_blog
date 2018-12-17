@@ -15,6 +15,7 @@ type AuthController struct {
 // 定义变量
 var (
 	AuthRoleModel *models.AuthRole
+	AdminModel *models.Admin
 )
 
 // 角色编辑页面
@@ -361,4 +362,75 @@ func (this *AuthController) PermissionDel(){
 		this.renderJson(200, "删除成功", nil)
 	}
 
+}
+
+
+// 后台用户
+func (this *AuthController) AdminList(){
+
+	if this.Ctx.Request.Method == "POST" {
+
+		// 接受设置参数
+		filter := models.Filter{}
+		filter.Page, _ = this.GetInt("page")
+		filter.PageSize, _ = this.GetInt("limit")
+
+		list, count := AdminModel.GetListByWhere(&filter)
+
+		this.setInputData(Response{Count:count})
+
+		this.renderJson(0, "success", list)
+	}
+	this.TplName = this.controllerName + "/admin_list.html"
+}
+
+// 后台用户编辑
+func (this *AuthController) Admin(){
+
+	id, _ := this.GetInt64("id")
+
+	if id != 0 {
+		info := models.Admin{Id:id}
+		this.o.Read(&info)
+		this.Data["info"] = info
+	}
+
+	this.TplName = this.controllerName + "/admin.html"
+}
+
+// 后台用户保存
+func (this *AuthController) AdminSave(){
+
+	id, _ := this.GetInt64("id")
+
+	info := models.Admin{}
+	info.Username = this.GetString("username")
+	info.Phone, _ = this.GetInt64("phone")
+	info.Email = this.GetString("email")
+	info.RoleId, _ = this.GetInt64("role")
+	info.Status, _ = this.GetInt64("status")
+	info.UpdatedAt = time.Now()
+
+	if id == 0 {
+
+		info.CreatedAt = time.Now()
+		if _, err := this.o.Insert(&info); err != nil {
+
+			this.renderJson(500, "创建失败 "+err.Error(),nil)
+		} else {
+
+			this.renderJson(200, "创建成功",nil)
+		}
+	} else {
+
+		info.Id = id
+
+		if _, err := this.o.Update(&info,"Username","Phone","Email","RoleId","Status","UpdatedAt"); err != nil {
+
+			this.renderJson(500, "更新失败 "+err.Error(), nil)
+		} else {
+
+			this.renderJson(200, "更新成功", nil)
+		}
+	}
 }
